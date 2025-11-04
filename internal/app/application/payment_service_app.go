@@ -1,4 +1,4 @@
-package app
+package application
 
 import (
 	"context"
@@ -67,7 +67,7 @@ func (s *PaymentService) CreateAndQueuePayment(
 		UserID:    userID,
 		Amount:    amount,
 		Currency:  currency,
-		Status:    "PENDING",
+		Status:    domain.StatusPending,
 		CreatedAt: time.Now(),
 	}
 

@@ -30,7 +30,6 @@ RUN apk --no-cache add ca-certificates
 
 # Copy compiled binary and version info
 COPY --from=builder /bin/payment_service_poc /bin/payment_service_poc
-COPY version.build /app/version.build
 
 WORKDIR /app
 

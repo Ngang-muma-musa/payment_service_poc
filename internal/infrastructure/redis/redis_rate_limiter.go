@@ -9,13 +9,13 @@ import (
 
 type RedisRateLimiter struct {
 	client *redis.Client
-	limit  int
+	limit  int64
 	window time.Duration
 }
 
 func NewRedisRateLimiter(
 	client *redis.Client,
-	limit int,
+	limit int64,
 	window time.Duration) *RedisRateLimiter {
 	return &RedisRateLimiter{client: client, limit: limit, window: window}
 }

@@ -3,7 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
-	"paymentservice/internal/app"
+	"paymentservice/internal/app/application"
 	"paymentservice/internal/domain"
 
 	"github.com/labstack/echo/v4"
@@ -14,11 +14,11 @@ type Payment interface {
 }
 
 type PaymentServiceHandler struct {
-	paymentServiceApp app.PaymentServiceApp
+	paymentServiceApp application.PaymentServiceApp
 }
 
 func NewPaymentServiceHandler(
-	paymentServiceApp app.PaymentServiceApp,
+	paymentServiceApp application.PaymentServiceApp,
 ) Payment {
 	return &PaymentServiceHandler{
 		paymentServiceApp: paymentServiceApp,
