@@ -42,6 +42,16 @@ logs:
 shell:
 	$(DOCKER_COMPOSE) exec $(APP_SERVICE) sh
 
+dev-api:
+	$(MAKE) build SERVICE=api
+	$(DOCKER_COMPOSE) run --rm --service-ports app sh -c "go run ./cmd/api/main.go"
+	
+dev-worker:
+	$(MAKE) build SERVICE=worker
+	$(DOCKER_COMPOSE) run --rm --service-ports app sh -c "go run ./cmd/worker/main.go"
+
+dev: dev-worker dev-api
+
 # ───────────────────────────────────────────────
 # Go-specific helpers (run inside container)
 # ───────────────────────────────────────────────

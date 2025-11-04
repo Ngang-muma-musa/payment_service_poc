@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"paymentservice/internal/app/application"
@@ -46,6 +47,12 @@ func (p *PaymentServiceHandler) ProcessPayment(c echo.Context) error {
 	)
 
 	if err != nil {
+		if errors.Is(err, application.ErrRateLimitExceeded) {
+			return c.JSON(http.StatusTooManyRequests, map[string]string{
+				"error": err.Error(),
+			})
+		}
+
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"error": "Error occurred creating payment",
 		})
