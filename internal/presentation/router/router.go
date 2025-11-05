@@ -34,4 +34,5 @@ func (r *router) registerAPI(e *echo.Echo) {
 	})
 
 	e.POST("/payments", r.paymentServiceHandler.ProcessPayment)
+	e.GET("/payments/:id", r.paymentServiceHandler.GetPaymentByID)
 }

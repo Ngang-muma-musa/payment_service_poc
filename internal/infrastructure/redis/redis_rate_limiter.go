@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -25,7 +26,7 @@ func (r *RedisRateLimiter) Allow(
 	ctx context.Context,
 	key string,
 ) (bool, error) {
-	count, err := r.client.Incr(ctx, key).Result()
+	count, err := r.client.Incr(ctx, fmt.Sprintf("rate-limit-key:user-%s", key)).Result()
 	if err != nil {
 		return false, err
 	}

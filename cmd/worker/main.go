@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"paymentservice/internal/infrastructure/beanstalk"
 	"paymentservice/internal/infrastructure/orm"
+	"paymentservice/internal/infrastructure/redis"
 	"paymentservice/internal/infrastructure/worker"
 	"strconv"
 	"syscall"
@@ -16,6 +17,7 @@ import (
 func main() {
 	ctx := context.Background()
 	beanstalkAddr := os.Getenv("BEANSTALK_ADR")
+	redisDsn := os.Getenv("REDIS_DSN")
 	tubeName := os.Getenv("BEANSTALK_TUBE_NAME")
 	maxWorkersStr := os.Getenv("MAX_WORKERS")
 	if maxWorkersStr == "" {
@@ -31,7 +33,12 @@ func main() {
 		log.Fatalf("failed to connect to beanstalk: %v", err)
 	}
 
-	repo := orm.NewPaymentServiceRepository()
+	cache, err := redis.BuildRedisCache(redisDsn)
+	if err != nil {
+		log.Fatalf("failed to connect to redis: %v", err)
+	}
+
+	repo := orm.NewRedisPaymentRepository(cache, 0)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

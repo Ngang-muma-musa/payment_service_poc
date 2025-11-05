@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"log"
 	"os"
 	"os/signal"
 	"paymentservice/internal/app/application"
@@ -24,13 +25,11 @@ func Run(
 	rateLimitWindow int64,
 	appPort int64,
 ) {
-	// Initialize repository
-	paymentRepo := orm.NewPaymentServiceRepository()
 
 	// Initialize Beanstalk queue
 	conn, err := queue.BuildBeanstalkQueue(beanstalkAddr)
 	if err != nil {
-		panic(err)
+		log.Fatalf("failed to connect to beanstalk: %v", err)
 	}
 	defer conn.Close()
 
@@ -39,12 +38,15 @@ func Run(
 	// Initialize Redis and rate limiter
 	cache, err := redis.BuildRedisCache(redisDsn)
 	if err != nil {
-		panic(err)
+		log.Fatalf("failed to connect to redis: %v", err)
 	}
 	defer cache.Close()
 
 	window := time.Duration(rateLimitWindow) * time.Minute
 	ratelimiter := redis.NewRedisRateLimiter(cache, rateLimit, window)
+
+	// Initialize repository
+	paymentRepo := orm.NewRedisPaymentRepository(cache, 0)
 
 	// Root context
 	ctx, cancel := context.WithCancel(context.Background())

@@ -1,13 +1,32 @@
 services:
-  app:
-    build: .
+  api:
+    build:
+      context: .
+      args:
+        TARGET: api
     ports:
-      - "8080:8080"
+      - "8000:8080" 
     env_file:
       - .env
-    restart: always
+    depends_on:
+      - redis
+      - queue
+    command: ["go", "run", "./cmd/api/main.go"]
     volumes:
-       - .:/app
+        - .:/app
+  worker:
+    build:
+      context: .
+      args:
+        TARGET: worker
+    env_file:
+      - .env
+    environment:
+      BEANSTALK_ADDR: queue:11300
+    depends_on:
+      - queue
+    command: ["go", "run", "./cmd/worker/main.go"]
+
   redis:
     image: redis:latest
     restart: unless-stopped
