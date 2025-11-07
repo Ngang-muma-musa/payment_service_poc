@@ -2,7 +2,7 @@
 
 This project is a Payment Processing Proof of Concept (POC) built using Golang, Redis, Beanstalkd, and Docker Compose.
 
-The goal of the POC is to demonstrate API Rate Limiting, Asynchronous Job Queueing, and Worker-based Background Processing inside a Microservices-inspired architecture — all using lightweight tools suitable for learning and interviews.
+The goal of the POC is to demonstrate API Rate Limiting, Asynchronous Job Queueing, and Worker-based Background Processing inside a Microservices-inspired architecture, all using lightweight tools suitable for learning and interviews.
 
 The application consists of two main services:
 
